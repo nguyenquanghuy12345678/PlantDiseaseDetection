@@ -31,7 +31,7 @@ app.add_middleware(
 # Add CORS middleware (if needed for future SPA)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -71,13 +71,20 @@ async def not_found_handler(request: Request, exc: Exception):
 @app.on_event("startup")
 async def startup_event():
     """Initialize application on startup"""
+    env_info = settings.get_env_info()
+    
     print("=" * 60)
-    print(f"🌱 {settings.APP_NAME} v{settings.APP_VERSION}")
+    print(f"🌱 {env_info['app_name']} v{env_info['version']}")
     print("=" * 60)
+    print(f"📍 Environment: {env_info['environment']}")
     print(f"📍 Running on: http://{settings.HOST}:{settings.PORT}")
     print(f"📁 Upload folder: {settings.UPLOAD_FOLDER}")
     print(f"🤖 Model path: {settings.MODEL_PATH}")
-    print(f"📚 API docs: http://{settings.HOST}:{settings.PORT}/docs")
+    
+    if env_info['debug']:
+        print(f"📚 API docs: http://{settings.HOST}:{settings.PORT}/docs")
+        print(f"📚 ReDoc: http://{settings.HOST}:{settings.PORT}/redoc")
+    
     print("=" * 60)
     
     # Pre-load ML model (optional optimization)

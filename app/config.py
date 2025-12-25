@@ -3,7 +3,8 @@ FastAPI Application Configuration using Pydantic Settings
 """
 from pydantic_settings import BaseSettings
 from pathlib import Path
-from typing import Set
+from typing import Set, Optional
+import os
 
 
 class Settings(BaseSettings):
@@ -12,12 +13,12 @@ class Settings(BaseSettings):
     # App settings
     APP_NAME: str = "Plant Disease Detection API"
     APP_VERSION: str = "2.0.0"
-    SECRET_KEY: str = "dev-secret-key-change-in-production"
+    SECRET_KEY: str = "dev-secret-key-change-in-production-min-32-chars"
     DEBUG: bool = True
     
     # Server settings
     HOST: str = "0.0.0.0"
-    PORT: int = 8000
+    PORT: int = int(os.getenv("PORT", "8000"))  # Render uses PORT env var
     
     # File upload settings
     MAX_FILE_SIZE: int = 16 * 1024 * 1024  # 16MB
@@ -32,15 +33,34 @@ class Settings(BaseSettings):
     TEMPLATES_DIR: Path = BASE_DIR / "templates"
     
     # Image processing settings
-    IMG_SIZE: tuple = (224, 224)
+    IMG_HEIGHT: int = 224
+    IMG_WIDTH: int = 224
+    
+    @property
+    def IMG_SIZE(self) -> tuple:
+        """Return image size as tuple"""
+        return (self.IMG_HEIGHT, self.IMG_WIDTH)
     
     # Session settings
     SESSION_MAX_AGE: int = 86400  # 24 hours in seconds
+    
+    # CORS settings (for production)
+    CORS_ORIGINS: list = ["*"]  # Override in production with specific domains
     
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
         case_sensitive = False
+        
+    def get_env_info(self) -> dict:
+        """Get current environment info for debugging"""
+        return {
+            "app_name": self.APP_NAME,
+            "version": self.APP_VERSION,
+            "debug": self.DEBUG,
+            "port": self.PORT,
+            "environment": "development" if self.DEBUG else "production"
+        }
     
     def init_folders(self):
         """Create necessary folders if they don't exist"""

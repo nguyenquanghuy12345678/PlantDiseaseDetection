@@ -1,10 +1,11 @@
 # 🌱 Plant Disease Detection - AI Challenge 2025
 
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Flask 3.0.0](https://img.shields.io/badge/flask-3.0.0-green.svg)](https://flask.palletsprojects.com/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![FastAPI 0.109.0](https://img.shields.io/badge/FastAPI-0.109.0-009688.svg)](https://fastapi.tiangolo.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Deploy to Render](https://img.shields.io/badge/Deploy-Render-46E3B7.svg)](https://render.com/deploy?repo=https://github.com/nguyenquanghuy12345678/PlantDiseaseDetection)
 
-Ứng dụng web AI phát hiện và phân loại **15 loại bệnh cây trồng** từ hình ảnh lá cây bằng Deep Learning (MobileNetV2).
+Ứng dụng web AI phát hiện và phân loại **15 loại bệnh cây trồng** từ hình ảnh lá cây bằng Deep Learning (MobileNetV2) với FastAPI.
 
 ![Demo](https://via.placeholder.com/800x400/4CAF50/FFFFFF?text=Plant+Disease+Detection+Demo)
 
@@ -27,27 +28,76 @@
 - **Architecture**: Lightweight (2.5M params) cho deployment hiệu quả
 - **Accuracy**: 85-95% (depending on dataset quality)
 - **Classes**: 15 loại bệnh cây trồng phổ biến tại Việt Nam
-- **Data Augmentation**: Rotation, flip, zoom, shift, shear
+- **Advanced Detection**: HSV color analysis, texture & pattern recognition
 - **Training**: Custom script với callbacks (early stopping, LR scheduling)
+
+### 🚀 FastAPI Features (v2.0)
+- **Auto-generated API docs**: Swagger UI at `/docs`, ReDoc at `/redoc`
+- **Type-safe validation**: Pydantic models cho request/response
+- **Async support**: ASGI server với Uvicorn
+- **Modular architecture**: Separated routes, models, core logic
+- **Production-ready**: Environment variables, error handling, CORS
 
 ---
 
-## 🚀 Quick Start (3 bước!)
+## 🚀 Quick Start
 
-### 1️⃣ Cài đặt dependencies
+### Option 1: Local Development
+
+#### 1️⃣ Clone repository
+```bash
+git clone https://github.com/nguyenquanghuy12345678/PlantDiseaseDetection.git
+cd PlantDiseaseDetection
+```
+
+#### 2️⃣ Create virtual environment
+```bash
+python -m venv .venv
+
+# Windows
+.venv\Scripts\activate
+
+# Linux/Mac
+source .venv/bin/activate
+```
+
+#### 3️⃣ Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2️⃣ Chạy ứng dụng
+#### 4️⃣ Configure environment
 ```bash
-python app.py
+# Copy example env file
+cp .env.example .env
+
+# Edit .env with your settings (optional - defaults work)
+# Generate SECRET_KEY:
+python -c "import secrets; print(secrets.token_urlsafe(32))"
 ```
 
-### 3️⃣ Mở trình duyệt
+#### 5️⃣ Run application
+```bash
+# Method 1: Using Uvicorn directly
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+# Method 2: Using Python module
+python -m uvicorn app.main:app --reload
+
+# Method 3: Run main.py
+python app/main.py
 ```
-http://localhost:5000
-```
+
+#### 6️⃣ Open browser
+- **Homepage:** http://localhost:8000
+- **API Docs:** http://localhost:8000/docs
+- **ReDoc:** http://localhost:8000/redoc
+
+### Option 2: Deploy to Render (One-Click)
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/nguyenquanghuy12345678/PlantDiseaseDetection)
+
+**See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.**
 
 ✅ **Xong!** App chạy ở **demo mode** với dummy predictions.
 
