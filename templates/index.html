@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Disease Detection - AI Challenge 2025</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <span class="logo-icon">🌿</span>
+                    <div>
+                        <h1>Plant Disease Detection</h1>
+                        <p class="subtitle">Phát hiện bệnh cây trồng bằng AI</p>
+                    </div>
+                </div>
+                <div class="header-badge">
+                    <span class="badge">AI Challenge 2025</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Introduction Section -->
+        <section class="intro-section">
+            <div class="intro-grid">
+                <div class="intro-card feature-card">
+                    <div class="card-icon">🎯</div>
+                    <h3>Mục Tiêu</h3>
+                    <p>Hỗ trợ nông dân phát hiện sớm bệnh cây trồng, giảm thiệt hại mùa màng và tăng năng suất nông nghiệp Việt Nam</p>
+                </div>
+                <div class="intro-card feature-card">
+                    <div class="card-icon">🤖</div>
+                    <h3>Công Nghệ</h3>
+                    <p>Sử dụng Deep Learning và Computer Vision để phân tích hình ảnh lá cây với độ chính xác cao</p>
+                </div>
+                <div class="intro-card feature-card">
+                    <div class="card-icon">💊</div>
+                    <h3>Giải Pháp</h3>
+                    <p>Đưa ra chẩn đoán chi tiết và gợi ý điều trị phù hợp với điều kiện canh tác tại Việt Nam</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upload Section -->
+        <section class="upload-section">
+            <div class="section-header">
+                <h2>📸 Tải Ảnh Lên</h2>
+                <p class="section-subtitle">Chọn ảnh lá cây để phân tích bệnh</p>
+            </div>
+            
+            <div class="upload-container">
+                <!-- File Upload -->
+                <div class="upload-method">
+                    <div class="method-header">
+                        <span class="method-icon">📁</span>
+                        <h3>Upload từ File</h3>
+                    </div>
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <input type="file" id="fileInput" accept="image/png,image/jpeg,image/jpg" hidden>
+                        <label for="fileInput" class="upload-label">
+                            <div class="upload-icon-large">📤</div>
+                            <span class="upload-text">Kéo thả ảnh vào đây</span>
+                            <span class="upload-subtext">hoặc nhấn để chọn file</span>
+                            <span class="upload-hint">PNG, JPG, JPEG • Tối đa 16MB</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Webcam Capture -->
+                <div class="upload-method">
+                    <div class="method-header">
+                        <span class="method-icon">📷</span>
+                        <h3>Chụp từ Webcam</h3>
+                    </div>
+                    <div class="webcam-container">
+                        <div class="webcam-wrapper">
+                            <video id="webcam" autoplay playsinline></video>
+                            <canvas id="canvas" hidden></canvas>
+                            <div class="webcam-placeholder" id="webcamPlaceholder">
+                                <div class="placeholder-icon">📹</div>
+                                <p>Nhấn "Bật Webcam" để bắt đầu</p>
+                            </div>
+                        </div>
+                        <div class="webcam-controls">
+                            <button id="startWebcamBtn" class="btn btn-primary">
+                                <span>📷</span> Bật Webcam
+                            </button>
+                            <button id="captureBtn" class="btn btn-success" disabled>
+                                <span>📸</span> Chụp Ảnh
+                            </button>
+                            <button id="stopWebcamBtn" class="btn btn-secondary" disabled>
+                                <span>❌</span> Tắt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Preview -->
+            <div id="previewSection" class="preview-section" hidden>
+                <div class="preview-card">
+                    <h3>✅ Ảnh Đã Chọn</h3>
+                    <div class="preview-image-container">
+                        <img id="previewImage" alt="Preview">
+                    </div>
+                    <div class="preview-actions">
+                        <button id="analyzeBtn" class="btn btn-large btn-primary">
+                            <span>🔍</span> Phân Tích Ngay
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="loading" hidden>
+            <div class="spinner"></div>
+            <p>Đang phân tích ảnh...</p>
+        </div>
+
+        <!-- Results Section -->
+        <section id="resultsSection" class="results-section" hidden>
+            <div class="section-header">
+                <h2>✅ Kết Quả Phân Tích</h2>
+                <p class="section-subtitle">Dự đoán bệnh và gợi ý điều trị</p>
+            </div>
+            
+            <!-- Main Result Card -->
+            <div class="main-result-card">
+                <div class="result-image-section">
+                    <div class="result-image-wrapper">
+                        <img id="resultImage" alt="Analyzed image">
+                    </div>
+                </div>
+                <div class="result-info-section">
+                    <div class="disease-badge">
+                        <h3 id="diseaseName" class="disease-name">-</h3>
+                        <div id="severityIndicator" class="severity-badge"></div>
+                    </div>
+                    <div class="confidence-display" id="confidenceBadge">
+                        <div class="confidence-circle">
+                            <svg viewBox="0 0 36 36" class="circular-chart">
+                                <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                <path id="confidenceCircle" class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                <text x="18" y="20.35" class="percentage" id="confidenceText">0%</text>
+                            </svg>
+                        </div>
+                        <span class="confidence-label">Độ Tin Cậy</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top 3 Predictions -->
+            <div class="predictions-section">
+                <h3 class="subsection-title">🏆 Top 3 Dự Đoán</h3>
+                <div id="top3Predictions" class="predictions-grid"></div>
+            </div>
+
+            <!-- Confidence Chart -->
+            <div class="chart-section">
+                <h3 class="subsection-title">📈 Biểu Đồ Độ Tin Cậy</h3>
+                <div class="chart-wrapper">
+                    <canvas id="confidenceChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Treatment Recommendations -->
+            <div class="treatment-section">
+                <h3 class="subsection-title">💊 Gợi Ý Khắc Phục</h3>
+                <div class="treatment-grid">
+                    <div class="treatment-card">
+                        <div class="treatment-header">
+                            <span class="treatment-icon">🔍</span>
+                            <h4>Chẩn Đoán</h4>
+                        </div>
+                        <p id="diagnosis" class="treatment-content">-</p>
+                    </div>
+                    <div class="treatment-card">
+                        <div class="treatment-header">
+                            <span class="treatment-icon">💊</span>
+                            <h4>Cách Điều Trị</h4>
+                        </div>
+                        <p id="treatment" class="treatment-content">-</p>
+                    </div>
+                    <div class="treatment-card full-width">
+                        <div class="treatment-header">
+                            <span class="treatment-icon">🛡️</span>
+                            <h4>Biện Pháp Phòng Ngừa</h4>
+                        </div>
+                        <ul id="preventionList" class="prevention-list"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-actions">
+                <button id="newAnalysisBtn" class="btn btn-large btn-primary">
+                    <span>🔄</span> Phân Tích Ảnh Mới
+                </button>
+            </div>
+        </section>
+
+        <!-- History Section -->
+        <section class="history-section">
+            <div class="section-header">
+                <h2>📜 Lịch Sử Dự Đoán</h2>
+                <button id="clearHistoryBtn" class="btn btn-secondary btn-sm">
+                    <span>🗑️</span> Xóa Lịch Sử
+                </button>
+            </div>
+            <div id="historyList" class="history-grid">
+                <p class="empty-message">Chưa có lịch sử dự đoán</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>🌱 Plant Disease Detection</h4>
+                    <p>Hệ thống AI hỗ trợ nông nghiệp thông minh</p>
+                </div>
+                <div class="footer-section">
+                    <p><strong>AI Challenge 2025</strong></p>
+                    <p>Phát triển bởi [Tên đội]</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Plant Disease Detection. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chart_handler.js') }}"></script>
+</body>
+</html>

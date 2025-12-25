@@ -1,0 +1,13 @@
+{
+  "model_type": "simple_cnn",
+  "input_shape": [
+    224,
+    224,
+    3
+  ],
+  "output_classes": 15,
+  "architecture": "MobileNetV2-based",
+  "weights": "simulated_imagenet",
+  "created_by": "auto_script",
+  "note": "Simplified model for Python 3.14 compatibility"
+}

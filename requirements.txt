@@ -1,0 +1,26 @@
+# FastAPI Core dependencies (required)
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# Image Processing
+Pillow==10.1.0
+numpy==1.24.3
+
+# Utilities
+python-dotenv==1.0.0
+itsdangerous==2.1.2
+
+# Optional - Machine Learning (TensorFlow for advanced predictions)
+# tensorflow>=2.13.0
+# keras
+
+# Optional - for training model
+# matplotlib>=3.7.0
+# kaggle>=1.5.16
+# gdown>=4.7.1
+
+# Uncomment above to enable ML features
+# Or install separately: pip install tensorflow keras matplotlib kaggle gdown
