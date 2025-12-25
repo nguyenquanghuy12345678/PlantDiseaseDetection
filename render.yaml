@@ -9,13 +9,13 @@ services:
     region: oregon
     plan: free
     branch: main
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1 --timeout-keep-alive 30
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     
     # Environment Variables
     envVars:
       - key: PYTHON_VERSION
-        value: 3.12.0
+        value: "3.12"
       
       - key: APP_NAME
         value: Plant Disease Detection API
@@ -24,39 +24,37 @@ services:
         value: 2.0.0
       
       - key: DEBUG
-        value: false
+        value: "false"
       
       - key: SECRET_KEY
         generateValue: true
-        # Or set manually in Render dashboard
       
       - key: HOST
-        value: 0.0.0.0
+        value: "0.0.0.0"
       
-      - key: PORT
-        value: 8000
+      # PORT is provided by Render automatically, no need to set
       
       - key: MAX_FILE_SIZE
-        value: 16777216
+        value: "16777216"
       
       - key: ALLOWED_EXTENSIONS
-        value: png,jpg,jpeg
+        value: "png,jpg,jpeg"
       
       - key: SESSION_MAX_AGE
-        value: 86400
+        value: "86400"
       
       - key: IMG_HEIGHT
-        value: 224
+        value: "224"
       
       - key: IMG_WIDTH
-        value: 224
+        value: "224"
       
       # TensorFlow optimization
       - key: TF_ENABLE_ONEDNN_OPTS
-        value: 0
+        value: "0"
       
       - key: TF_CPP_MIN_LOG_LEVEL
-        value: 2
+        value: "2"
     
     # Health check endpoint
     healthCheckPath: /api/health
@@ -66,12 +64,6 @@ services:
     
     # Instance settings
     numInstances: 1
-    
-    # Disk for uploaded images (persistent storage)
-    disk:
-      name: uploads
-      mountPath: /opt/render/project/src/static/uploads
-      sizeGB: 1
 
 # Optional: Database (uncomment if needed)
 # databases:
