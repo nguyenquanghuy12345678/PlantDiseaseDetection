@@ -77,7 +77,19 @@ async def predict_upload(request: Request, file: UploadFile = File(...)):
         from app.core.ml.model_handler import get_predictions
         from app.core.data.treatment_data import get_treatment_info
         
-        predictions = get_predictions(str(image_path), top_k=3)
+        try:
+            print(f"🔍 Starting prediction for: {image_path}")
+            predictions = get_predictions(str(image_path), top_k=3)
+            print(f"✅ Prediction successful: {predictions[0]['disease']}")
+        except Exception as pred_error:
+            import traceback
+            error_details = traceback.format_exc()
+            print(f"❌ PREDICTION ERROR: {pred_error}")
+            print(f"Traceback:\n{error_details}")
+            raise HTTPException(
+                status_code=500,
+                detail=f"Prediction failed: {str(pred_error)}"
+            )
         
         # Get treatment info for top prediction
         top_class = predictions[0]['class']
@@ -169,7 +181,19 @@ async def predict_webcam(request: Request, data: WebcamPredictRequest):
         from app.core.ml.model_handler import get_predictions
         from app.core.data.treatment_data import get_treatment_info
         
-        predictions = get_predictions(str(image_path), top_k=3)
+        try:
+            print(f"🔍 Starting webcam prediction for: {image_path}")
+            predictions = get_predictions(str(image_path), top_k=3)
+            print(f"✅ Prediction successful: {predictions[0]['disease']}")
+        except Exception as pred_error:
+            import traceback
+            error_details = traceback.format_exc()
+            print(f"❌ WEBCAM PREDICTION ERROR: {pred_error}")
+            print(f"Traceback:\n{error_details}")
+            raise HTTPException(
+                status_code=500,
+                detail=f"Prediction failed: {str(pred_error)}"
+            )
         
         # Get treatment info for top prediction
         top_class = predictions[0]['class']
