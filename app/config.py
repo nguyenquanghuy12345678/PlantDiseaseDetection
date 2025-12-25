@@ -1,10 +1,10 @@
 """
 FastAPI Application Configuration using Pydantic Settings
 """
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, SettingsConfigDict, PydanticBaseSettingsSource
 from pydantic import Field
 from pathlib import Path
-from typing import Set, Optional
+from typing import Set, Optional, Tuple, Type
 import os
 
 
@@ -28,12 +28,10 @@ class Settings(BaseSettings):
     HOST: str = "0.0.0.0"
     PORT: int = int(os.getenv("PORT", "8000"))  # Render uses PORT env var
     
-    # File upload settings
+    # File upload settings - Not configurable via env vars
     MAX_FILE_SIZE: int = 16 * 1024 * 1024  # 16MB
-    ALLOWED_EXTENSIONS: Set[str] = Field(
-        default={"png", "jpg", "jpeg"},
-        json_schema_extra={"env_ignore": True}
-    )
+    ALLOWED_EXTENSIONS: Set[str] = {"png", "jpg", "jpeg"}
+    CORS_ORIGINS: list = ["*"]  # Override in production
     
     # Paths
     BASE_DIR: Path = Path(__file__).parent.parent
@@ -55,11 +53,31 @@ class Settings(BaseSettings):
     # Session settings
     SESSION_MAX_AGE: int = 86400  # 24 hours in seconds
     
-    # CORS settings (for production)
-    CORS_ORIGINS: list = Field(
-        default=["*"],
-        json_schema_extra={"env_ignore": True}
-    )
+    @classmethod
+    def settings_customise_sources(
+        cls,
+        settings_cls: Type[BaseSettings],
+        init_settings: PydanticBaseSettingsSource,
+        env_settings: PydanticBaseSettingsSource,
+        dotenv_settings: PydanticBaseSettingsSource,
+        file_secret_settings: PydanticBaseSettingsSource,
+    ) -> Tuple[PydanticBaseSettingsSource, ...]:
+        """Customize settings sources to exclude complex types from env parsing"""
+        # Filter out ALLOWED_EXTENSIONS and CORS_ORIGINS from env sources
+        class FilteredEnvSettings(PydanticBaseSettingsSource):
+            def __call__(self):
+                data = env_settings() if callable(env_settings) else {}
+                # Remove fields that shouldn't be parsed from env
+                data.pop('ALLOWED_EXTENSIONS', None)
+                data.pop('CORS_ORIGINS', None)
+                return data
+        
+        return (
+            init_settings,
+            FilteredEnvSettings(settings_cls),
+            dotenv_settings,
+            file_secret_settings,
+        )
         
     def get_env_info(self) -> dict:
         """Get current environment info for debugging"""
