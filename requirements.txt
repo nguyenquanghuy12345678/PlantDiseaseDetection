@@ -4,6 +4,7 @@ uvicorn[standard]==0.32.1
 python-multipart==0.0.12
 pydantic==2.10.5
 pydantic-settings==2.7.1
+jinja2==3.1.4
 
 # Image Processing
 Pillow==11.0.0
@@ -13,9 +14,9 @@ numpy==2.4.0
 python-dotenv==1.0.0
 itsdangerous==2.1.2
 
-# Optional - Machine Learning (TensorFlow for advanced predictions)
-# tensorflow>=2.13.0
-# keras
+# Machine Learning (TensorFlow for predictions)
+tensorflow>=2.13.0,<2.18.0
+keras>=3.0.0
 
 # Optional - for training model
 # matplotlib>=3.7.0
