@@ -15,7 +15,7 @@ python-dotenv==1.0.0
 itsdangerous==2.1.2
 
 # Machine Learning (TensorFlow for predictions)
-tensorflow>=2.13.0,<2.18.0
+tensorflow-cpu==2.18.0
 keras>=3.0.0
 
 # Optional - for training model
