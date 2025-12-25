@@ -5,7 +5,7 @@ services:
   # FastAPI Web Service
   - type: web
     name: plant-disease-detection-api
-    env: python
+    runtime: python
     region: oregon
     plan: free
     branch: main
