@@ -120,6 +120,11 @@ async def predict_upload(request: Request, file: UploadFile = File(...)):
         if temp_file and temp_file.exists():
             temp_file.unlink()
         
+        # Log the full error for debugging
+        import traceback
+        print(f"❌ Upload prediction error: {str(e)}")
+        print(traceback.format_exc())
+        
         raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
 
 

@@ -14,7 +14,7 @@ class PredictionItem(BaseModel):
     """Single prediction item"""
     class_: str = Field(..., alias="class", description="Disease class name in Vietnamese")
     class_index: str = Field(..., description="Disease class key")
-    confidence: float = Field(..., ge=0.0, le=1.0, description="Confidence score 0-1")
+    confidence: float = Field(..., ge=0.0, le=100.0, description="Confidence score 0-100")
 
 
 class TreatmentInfo(BaseModel):

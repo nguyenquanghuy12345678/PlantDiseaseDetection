@@ -264,9 +264,13 @@ function displayTreatment(treatment) {
     const preventionList = document.getElementById('preventionList');
     preventionList.innerHTML = '';
     
-    treatment.prevention.forEach(item => {
+    // Prevention is now a string with bullet points, split by newlines
+    const preventionItems = treatment.prevention.split('\n').filter(item => item.trim());
+    
+    preventionItems.forEach(item => {
         const li = document.createElement('li');
-        li.textContent = item;
+        // Remove the bullet point if it exists (starts with •)
+        li.textContent = item.replace(/^[•\-]\s*/, '').trim();
         preventionList.appendChild(li);
     });
 }

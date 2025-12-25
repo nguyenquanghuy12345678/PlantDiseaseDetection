@@ -231,7 +231,7 @@ def get_predictions(image_path, top_k=3):
             predictions.append({
                 'class': vietnamese_label,
                 'class_index': class_name,
-                'confidence': float(prob)
+                'confidence': float(prob * 100)  # Convert to percentage (0-100)
             })
         
         return predictions[:top_k]
