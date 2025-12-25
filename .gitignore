@@ -89,3 +89,7 @@ htmlcov/
 *.db
 *.sqlite
 *.sqlite3
+
+# Render
+.render/
+render-build.sh

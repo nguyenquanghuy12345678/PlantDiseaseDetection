@@ -8,9 +8,10 @@ services:
     env: python
     region: oregon
     plan: free
+    pythonVersion: "3.12"
     branch: main
     buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1 --timeout-keep-alive 30
     
     # Environment Variables
     envVars:
@@ -59,10 +60,13 @@ services:
         value: 2
     
     # Health check endpoint
-    healthCheckPath: /
+    healthCheckPath: /api/health
     
     # Auto-deploy on push
     autoDeploy: true
+    
+    # Instance settings
+    numInstances: 1
     
     # Disk for uploaded images (persistent storage)
     disk:

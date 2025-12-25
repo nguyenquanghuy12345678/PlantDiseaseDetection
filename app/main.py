@@ -10,7 +10,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from fastapi.responses import JSONResponse
 
 from app.config import settings
-from app.api.routes import pages, predict, history
+from app.api.routes import pages, predict, history, health
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -47,6 +47,7 @@ templates = Jinja2Templates(directory=str(settings.TEMPLATES_DIR))
 app.include_router(pages.router, tags=["Pages"])
 app.include_router(predict.router, prefix="/api", tags=["Prediction"])
 app.include_router(history.router, prefix="/api", tags=["History"])
+app.include_router(health.router, prefix="/api", tags=["Health"])
 
 
 # Exception handlers
