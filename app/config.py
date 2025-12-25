@@ -1,7 +1,8 @@
 """
 FastAPI Application Configuration using Pydantic Settings
 """
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import Field
 from pathlib import Path
 from typing import Set, Optional
 import os
@@ -9,6 +10,13 @@ import os
 
 class Settings(BaseSettings):
     """Application settings with environment variable support"""
+    
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+        extra="ignore"
+    )
     
     # App settings
     APP_NAME: str = "Plant Disease Detection API"
@@ -22,7 +30,10 @@ class Settings(BaseSettings):
     
     # File upload settings
     MAX_FILE_SIZE: int = 16 * 1024 * 1024  # 16MB
-    ALLOWED_EXTENSIONS: Set[str] = {"png", "jpg", "jpeg"}
+    ALLOWED_EXTENSIONS: Set[str] = Field(
+        default={"png", "jpg", "jpeg"},
+        json_schema_extra={"env_ignore": True}
+    )
     
     # Paths
     BASE_DIR: Path = Path(__file__).parent.parent
@@ -45,12 +56,10 @@ class Settings(BaseSettings):
     SESSION_MAX_AGE: int = 86400  # 24 hours in seconds
     
     # CORS settings (for production)
-    CORS_ORIGINS: list = ["*"]  # Override in production with specific domains
-    
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = False
+    CORS_ORIGINS: list = Field(
+        default=["*"],
+        json_schema_extra={"env_ignore": True}
+    )
         
     def get_env_info(self) -> dict:
         """Get current environment info for debugging"""
